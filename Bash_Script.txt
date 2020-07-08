@@ -1,0 +1,19 @@
+module load eth_proxy
+export PATH=/cluster/home/moverath/sratoolkit.2.10.7-ubuntu64/bin:$PATH
+
+conda activate artic-ncov2019
+
+bsub -M 4000 -n 4 -W 20:00 -e error.txt -o output.txt 'while IFS= read -r I;do 
+fasterq-dump "$I";
+artic minion --medaka --normalise 200 --threads 4 --scheme-directory /cluster/home/moverath/artic-ncov2019/primer_schemes --read-file $I.fastq nCoV-2019/V3 "$I";
+done < /cluster/home/moverath/run_ids.txt'
+
+conda activate pangolin
+export PATH=/cluster/home/moverath/samtools-1.10:$PATH
+
+bsub -M 4000 -n 4 -e error2.txt -o output.txt 
+'while IFS= read -r I;do 
+samtools coverage $I.sorted.bam -o "$I"_coverage.txt;
+pangolin $I.consensus.fasta --outfile "$I"_lineage.csv; 
+done < /cluster/home/moverath/run_ids2.txt'
+
