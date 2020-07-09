@@ -15,7 +15,7 @@ conda activate pangolin;
 cd ../..; 
 samtools coverage $I.sorted.bam -o ./coverage/"$I"_coverage.txt; 
 cd ..; 
-pangolin $I.consensus.fasta --outfile ./lineages/$I"_lineage.csv; 
+pangolin $I.consensus.fasta --outfile ./lineages/"$I"_lineage.csv; 
 done
 
 
