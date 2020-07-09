@@ -1,6 +1,6 @@
 
-export PATH=/cluster/home/moverath/sratoolkit.2.10.7-ubuntu64/bin:$PATH
-export PATH=/cluster/home/moverath/samtools-1.10:$PATH
+export PATH=/home/sratoolkit.2.10.7-ubuntu64/bin:$PATH
+export PATH=/home/samtools-1.10:$PATH
 mkdir lineages
 mkdir coverage
 
