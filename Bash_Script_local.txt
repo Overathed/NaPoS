@@ -1,19 +1,22 @@
-
 export PATH=/home/sratoolkit.2.10.7-ubuntu64/bin:$PATH
 export PATH=/home/samtools-1.10:$PATH
 mkdir lineages
 mkdir coverage
 
-for I in $(cat /home/run_ids.txt);do 
-fasterq-dump "$I" --outdir ./$I;  
-conda activate artic-ncov2019;
-mkdir ./$I/filtered;
-artic guppyplex --min-length 400 --max-length 700 --directory ./$I --prefix $I --output ./$I/filtered/$I.fastq;
+for I in $(cat /home/run_ids.txt);do
+mkdir $I; 
+echo "Running fasterq-dump with $I..."; 
+fasterq-dump "$I" --outdir ./$I;
+conda activate artic-ncov2019; 
+mkdir ./$I/filtered; 
+artic guppyplex --min-length 400 --max-length 700 --directory ./$I --prefix $I --output ./$I/filtered/$I.fastq; 
 artic minion --medaka --normalise 200 --threads 4 --scheme-directory /home/artic-ncov2019/primer_schemes --read-file ./$I/filtered/$I.fastq nCoV-2019/V3 "$I"; 
-conda activate pangolin;
-cd ../..;
+conda activate pangolin; 
+cd ../..; 
 samtools coverage $I.sorted.bam -o ./coverage/"$I"_coverage.txt; 
-cd ..;
-pangolin $I.consensus.fasta --outfile "./lineages/$I"_lineage.csv"
+cd ..; 
+pangolin $I.consensus.fasta --outfile ./lineages/$I"_lineage.csv; 
 done
+
+
 
