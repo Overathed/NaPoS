@@ -4,9 +4,11 @@ export PATH=/cluster/home/moverath/samtools-1.10:$PATH
 mkdir lineages
 mkdir coverage
 
-for I in $(cat /cluster/home/moverath/run_ids.txt);do 
+for I in $(cat /cluster/home/moverath/run_ids3.txt);do 
 bsub -M 4000 -n 4 -e error_$I.txt -o output_$I.txt "mkdir $I;
-fasterq-dump "$I" --outdir $I; 
+cd $I;
+fasterq-dump "$I"; 
+cd ..;
 source /cluster/scratch/moverath/miniconda3/etc/profile.d/conda.sh; 
 conda activate artic-ncov2019;
 mkdir $I/filtered;
