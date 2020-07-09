@@ -1,0 +1,13 @@
+
+export PATH=/cluster/home/moverath/sratoolkit.2.10.7-ubuntu64/bin:$PATH
+export PATH=/cluster/home/moverath/samtools-1.10:$PATH
+
+for I in $(cat /home/run_ids.txt);do 
+fasterq-dump "$I"; 
+conda activate artic-ncov2019; 
+artic minion --medaka --normalise 200 --threads 4 --scheme-directory /home/artic-ncov2019/primer_schemes --read-file $I.fastq nCoV-2019/V3 "$I"; 
+conda activate pangolin; 
+samtools coverage $I.sorted.bam -o "$I"_coverage.txt; 
+pangolin $I.consensus.fasta --outfile "$I"_lineage.csv
+done
+
