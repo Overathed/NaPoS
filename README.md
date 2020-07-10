@@ -1,4 +1,3 @@
-# NaPoS-Pipe
-Nanopore SARS-CoV-2 Pipeline (NaPoS-Pipe)
+# NaPoS
 
-Pipeline to analyse SARS-CoV-2 sequencing data generated with the Oxford Nanopore platform.
+Tool to analyse Oxoford Nanopore SARS-CoV-2 (NaPoS) sequencing data obtained from the Sequencing Read Archive (SRA) 
