@@ -6,9 +6,10 @@ mkdir coverage;
 mkdir consensus;
 
 for I in $(cat /cluster/home/moverath/run_ids3.txt);do 
-bsub -M 4000 -n 4 -e error_$I.txt -o output_$I.txt "mkdir $I;
+bsub -M 4000 -n 4 -e error_$I.txt -o output_$I.txt "prefetch $I;
 cd $I;
-fasterq-dump "$I"; 
+fasterq-dump "$I".sra;
+rm $I.sra 
 cd ..;
 source /cluster/scratch/moverath/miniconda3/etc/profile.d/conda.sh; 
 conda activate artic-ncov2019;
