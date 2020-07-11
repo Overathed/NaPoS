@@ -1,8 +1,9 @@
-module load eth_proxy
-export PATH=/cluster/home/moverath/sratoolkit.2.10.7-ubuntu64/bin:$PATH
-export PATH=/cluster/home/moverath/samtools-1.10:$PATH
-mkdir lineages
-mkdir coverage
+module load eth_proxy;
+export PATH=/cluster/home/moverath/sratoolkit.2.10.7-ubuntu64/bin:$PATH;
+export PATH=/cluster/home/moverath/samtools-1.10:$PATH;
+mkdir lineages;
+mkdir coverage;
+mkdir consensus;
 
 for I in $(cat /cluster/home/moverath/run_ids3.txt);do 
 bsub -M 4000 -n 4 -e error_$I.txt -o output_$I.txt "mkdir $I;
@@ -16,8 +17,10 @@ artic guppyplex --min-length 400 --max-length 700 --directory $I --prefix $I --o
 cd $I/filtered;
 artic minion --medaka --normalise 200 --threads 4 --scheme-directory /cluster/home/moverath/artic-ncov2019/primer_schemes --read-file ./$Ifiltered/$I.fastq nCoV-2019/V3 "$I"; 
 conda activate pangolin;
+scp $I/filtered/$I.consensus.fasta consensus 
 cd ../..;
 samtools coverage $I/filtered/$I.sorted.bam -o coverage/"$I"_coverage.txt;
 pangolin $I/filtered/$I.consensus.fasta --outfile lineages/"$I"_lineage.csv"
 done
 
+augur align --sequences consensus/*.fasta --reference-sequence /cluster/home/moverath/artic-ncov2019/primer_schemes/nCoV-2019/V3/nCoV-2019.reference.fasta --output consensus/msa.fasta
