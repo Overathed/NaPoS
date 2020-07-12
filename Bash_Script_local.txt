@@ -3,6 +3,7 @@ export PATH=/home/samtools-1.10:$PATH;
 mkdir lineages;
 mkdir coverage;
 mkdir consensus;
+mkdir depth;
 
 count=0
 for I in $(cat /home/run_ids.txt);do
@@ -13,8 +14,11 @@ esearch -db sra -query ${I} | efetch -format runinfo | sed -n 2p >> covars.csv;
 fi
 count=1
 mkdir $I; 
-echo "Running fasterq-dump with $I..."; 
-fasterq-dump $I -O $I ;
+prefetch $I;
+cd $I;
+fasterq-dump $I.sra;
+rm $I.sra;
+cd ..;
 conda activate artic-ncov2019; 
 mkdir $I/filtered; 
 artic guppyplex --min-length 400 --max-length 700 --directory $I --prefix $I --output $I/filtered/$I.fastq;
@@ -23,7 +27,8 @@ artic minion --medaka --normalise 200 --threads 4 --scheme-directory /home/artic
 cd ../..;
 scp $I/filtered/$I.consensus.fasta consensus 
 conda activate pangolin; 
-samtools coverage $I/filtered/$I.sorted.bam -o coverage/"$I"_coverage.txt; 
+samtools coverage $I/filtered/$I.sorted.bam -o coverage/"$I"_coverage.txt;
+samtools depth $I/filtered/$I.sorted.bam -o depth/"$I"_depth.txt;
 pangolin $I/filtered/$I.consensus.fasta --outfile lineages/"$I"_lineage.csv; 
 done
 
