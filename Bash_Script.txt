@@ -28,7 +28,4 @@ done
 
 augur align --sequences consensus/*.fasta --reference-sequence /cluster/home/moverath/artic-ncov2019/primer_schemes/nCoV-2019/V3/nCoV-2019.reference.fasta --output consensus/msa.fasta
 
-for I in $(cat /cluster/home/moverath/run_ids4.txt);do 
-bsub -M 4000 -n 4 -e error_$I.txt -o output_$I.txt "samtools depth $I/filtered/$I.sorted.bam -o depth/"$I"_depth.txt;"
-done
 
